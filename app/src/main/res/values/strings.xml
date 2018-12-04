@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">LocationTest</string>
-    <string name="gps_works">That works</string>
-    <string name="gps_not_works">Doesn\'t work</string>
-    <string name="null_location">Unknown</string>
+    <string name="app_name">My Application</string>
+    <string name="correct">It's work</string>
+    <string name="locationTxt">Continuous Location Update</string>
+    <string name="action_settings">Settings</string>
 </resources>
