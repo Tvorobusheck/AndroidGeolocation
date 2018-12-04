@@ -1,4 +1,4 @@
-package com.beginerdranch.android.locationtest;
+package com.beginerdranch.android.myapplication;
 
 import org.junit.Test;
 

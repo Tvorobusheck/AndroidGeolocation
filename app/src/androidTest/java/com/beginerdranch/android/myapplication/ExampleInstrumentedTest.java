@@ -1,4 +1,4 @@
-package com.beginerdranch.android.locationtest;
+package com.beginerdranch.android.myapplication;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.beginerdranch.android.locationtest", appContext.getPackageName());
+        assertEquals("com.beginerdranch.android.myapplication", appContext.getPackageName());
     }
 }
