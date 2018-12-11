@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6300 64-bit) (preloaded format=pdflatex 2017.11.18)  9 DEC 2018 18:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6300 64-bit) (preloaded format=pdflatex 2017.11.18)  11 DEC 2018 20:49
 entering extended mode
 **./report.tex
 (report.tex
@@ -181,6 +181,18 @@ File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 
 LaTeX Warning: Label `fig:card' multiply defined.
 
+
+LaTeX Warning: Label `fig:card' multiply defined.
+
+
+LaTeX Warning: Label `fig:card' multiply defined.
+
+
+LaTeX Warning: Label `fig:card' multiply defined.
+
+
+LaTeX Warning: Label `fig:card' multiply defined.
+
 )
 \openout1 = `report.aux'.
 
@@ -315,55 +327,210 @@ Package pdftex.def Info: images/example.png used on input line 135.
 (pdftex.def)             Requested size: 311.27321pt x 622.54648pt.
 
 [3] [4 <./images/example.png>]
+<images/spy-location.jpg, id=22, 628.3475pt x 680.5425pt>
+File: images/spy-location.jpg Graphic file (type jpg)
+
+<use images/spy-location.jpg>
+Package pdftex.def Info: images/spy-location.jpg used on input line 166.
+(pdftex.def)             Requested size: 311.27321pt x 337.124pt.
+
+<images/15023617296655.jpg, id=23, 501.875pt x 391.4625pt>
+File: images/15023617296655.jpg Graphic file (type jpg)
+
+<use images/15023617296655.jpg>
+Package pdftex.def Info: images/15023617296655.jpg used on input line 174.
+(pdftex.def)             Requested size: 311.27321pt x 242.80577pt.
+ [5 <./images/spy-location.jpg>]
+<images/15023616915620.jpg, id=28, 328.97906pt x 276.28218pt>
+File: images/15023616915620.jpg Graphic file (type jpg)
+
+<use images/15023616915620.jpg>
+Package pdftex.def Info: images/15023616915620.jpg used on input line 182.
+(pdftex.def)             Requested size: 311.27321pt x 261.41685pt.
+
+<images/15023616597135.jpg, id=29, 493.0922pt x 274.77657pt>
+File: images/15023616597135.jpg Graphic file (type jpg)
+
+<use images/15023616597135.jpg>
+Package pdftex.def Info: images/15023616597135.jpg used on input line 190.
+(pdftex.def)             Requested size: 311.27321pt x 173.46652pt.
+ [6 <./images/15023617296655.jpg>]
+<images/15023616093087.jpg, id=33, 485.56406pt x 268.75406pt>
+File: images/15023616093087.jpg Graphic file (type jpg)
+
+<use images/15023616093087.jpg>
+Package pdftex.def Info: images/15023616093087.jpg used on input line 198.
+(pdftex.def)             Requested size: 311.27321pt x 172.28496pt.
+ [7 <./images/15023616915620.jpg> <./images/15023616597135.jpg>] [8 <./images/1
+5023616093087.jpg>] [9] [10]
 (D:\Programs\MiKTeX\tex\latex\listings\lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
-(D:\Programs\MiKTeX\tex\latex\listings\lstmisc.sty
-File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
+(../app/src/main/java/com/beginerdranch/android/myapplication/LocationActivity.
+java [11]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 33.
+ (D:\Programs\MiKTeX\tex\latex\base\omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Try loading font information for T2A+cmtt on input line 182
-.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 33.
 
-(D:\Programs\MiKTeX\tex\latex\cyrillic\t2acmtt.fd
-File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
-)
-LaTeX Font Info:    Font shape `T2A/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `T2A/cmtt/m/n' tried instead on input line 214.
- [5] [6] [7] [8] [9]
-<images/Screenshot_2018-12-07-12-01-59.png, id=41, 722.7pt x 1284.8pt>
-File: images/Screenshot_2018-12-07-12-01-59.png Graphic file (type png)
+Overfull \hbox (59.0253pt too wide) in paragraph at lines 46--47
+[][][][][][][][][][][] 
+ []
 
-<use images/Screenshot_2018-12-07-12-01-59.png>
-Package pdftex.def Info: images/Screenshot_2018-12-07-12-01-59.png used on inpu
-t line 427.
-(pdftex.def)             Requested size: 311.27321pt x 553.37465pt.
- [10] [11 <./images/Screenshot_2018-12-07-12-01-59.png>] [12] [13] [14] (report
-.aux)
+[12]
+Overfull \hbox (16.73526pt too wide) in paragraph at lines 67--68
+[][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (23.7836pt too wide) in paragraph at lines 68--69
+[][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (115.41202pt too wide) in paragraph at lines 89--90
+[][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (80.17032pt too wide) in paragraph at lines 93--94
+[][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (37.88028pt too wide) in paragraph at lines 97--98
+[][][][][][][][][][][][][][][][] 
+ []
+
+[13]
+Overfull \hbox (214.08878pt too wide) in paragraph at lines 104--105
+[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (1341.82315pt too wide) in paragraph at lines 109--110
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (44.92862pt too wide) in paragraph at lines 112--113
+[][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (178.84708pt too wide) in paragraph at lines 113--114
+[][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (44.92862pt too wide) in paragraph at lines 114--115
+[][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (171.79874pt too wide) in paragraph at lines 115--116
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (9.68692pt too wide) in paragraph at lines 116--117
+[][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (242.28214pt too wide) in paragraph at lines 119--120
+[][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (16.73526pt too wide) in paragraph at lines 130--131
+[][][][][][][][][][][][][][][] 
+ []
+
+[14]
+Overfull \hbox (23.7836pt too wide) in paragraph at lines 131--132
+[][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (171.79874pt too wide) in paragraph at lines 136--137
+[][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (37.88028pt too wide) in paragraph at lines 138--139
+[][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (23.7836pt too wide) in paragraph at lines 145--146
+[][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (30.83194pt too wide) in paragraph at lines 146--147
+[][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (2.63858pt too wide) in paragraph at lines 147--148
+[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (37.88028pt too wide) in paragraph at lines 150--151
+[][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[15]
+Overfull \hbox (9.68692pt too wide) in paragraph at lines 166--167
+[][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (23.7836pt too wide) in paragraph at lines 174--175
+[][][][][][][][][][][][][][][][][][][][] 
+ []
+
+) (../app/src/main/res/layout/activity_location.xml
+Overfull \hbox (242.28214pt too wide) in paragraph at lines 2--3
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[16]) [17]
+Underfull \hbox (badness 1924) in paragraph at lines 312--314
+[]\T2A/cmr/m/n/12 Google Play [Ёлек-трон-ный ре-сурс] : [сайт] - Ёлек-трон. дан
+. - –е-жим до-сту-
+ []
+
+[18] (report.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 6454 strings out of 493320
- 85037 string characters out of 3142888
- 280652 words of memory out of 3000000
- 9900 multiletter control sequences out of 15000+200000
- 17095 words of font info for 38 fonts, out of 3000000 for 9000
+ 6300 strings out of 493320
+ 82662 string characters out of 3142888
+ 198682 words of memory out of 3000000
+ 9737 multiletter control sequences out of 15000+200000
+ 15368 words of font info for 34 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,6n,49p,713b,1722s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 39i,7n,43p,958b,1660s stack positions out of 5000i,500n,10000p,200000b,50000s
 {D:/Programs/MiKTeX/fonts/enc/dvips/cm-super/cm-super-t2a.enc}<D:/Programs/Mi
-KTeX/fonts/type1/public/cm-super/sfbx1200.pfb><D:/Programs/MiKTeX/fonts/type1/p
-ublic/cm-super/sfbx1440.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-super/sfb
-x1728.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-super/sfcc1440.pfb><D:/Prog
-rams/MiKTeX/fonts/type1/public/cm-super/sfcc1728.pfb><D:/Programs/MiKTeX/fonts/
-type1/public/cm-super/sfit1000.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-su
-per/sfrm1200.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1440.pfb><
-D:/Programs/MiKTeX/fonts/type1/public/cm-super/sfti1095.pfb><D:/Programs/MiKTeX
-/fonts/type1/public/cm-super/sfti1200.pfb><D:/Programs/MiKTeX/fonts/type1/publi
-c/cm-super/sftt1000.pfb>
-Output written on report.pdf (14 pages, 729710 bytes).
+KTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><D:/Programs/MiKTeX/fonts/type1/
+public/cm-super/sfbx1200.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-super/sf
+bx1440.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-super/sfbx1728.pfb><D:/Pro
+grams/MiKTeX/fonts/type1/public/cm-super/sfcc1440.pfb><D:/Programs/MiKTeX/fonts
+/type1/public/cm-super/sfcc1728.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-s
+uper/sfrm1200.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1440.pfb>
+<D:/Programs/MiKTeX/fonts/type1/public/cm-super/sfti1095.pfb><D:/Programs/MiKTe
+X/fonts/type1/public/cm-super/sfti1200.pfb>
+Output written on report.pdf (18 pages, 1089931 bytes).
 PDF statistics:
- 95 PDF objects out of 1000 (max. 8388607)
+ 107 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

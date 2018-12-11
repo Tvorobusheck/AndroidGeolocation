@@ -150,286 +150,69 @@
 %%% В обзоре раскрывается текущее состояние исследований/разработок    %%%
 %%% в выбранной Вами области                                           %%%
 
-\section{Разработка тестового приложения}
+\section{Обзор приложений в данной области}
 
-\subsection{Java-код приложения}
+\subsection{Spyzie}
 
-Ниже приведён java-код приложения.
-
-\lstset{ %
-	% \usepackage{color} or \usepackage{xcolor}; should come as last argument
-	basicstyle=\ttfamily\footnotesize,
-	breakatwhitespace=false,
-	breaklines=true,
-	captionpos=b,
-	deletekeywords={...},
-	escapeinside={\%*}{*)},
-	extendedchars=true,
-	keepspaces=true,
-	language=C,
-	morekeywords={*,...},
-	showspaces=false,
-	showstringspaces=false,
-	showtabs=false,
-	numbers=none,
-	numbersep=8pt,
-	tabsize=4,
-	frame=lines,	
-	title=\lstname
-}
-
-
-\begin{lstlisting}[caption=Основной код прилжения из LocationActivity.java]
-package com.beginerdranch.android.myapplication;
-
-
-import android.Manifest;
-import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-
-import java.text.DateFormat;
-import java.util.Date;
-
-public class LocationActivity extends Activity implements
-LocationListener,
-GoogleApiClient.ConnectionCallbacks,
-GoogleApiClient.OnConnectionFailedListener {
-
-	private static final String TAG = "LocationActivity";
-	private static final long INTERVAL = 1000 * 10;
-	private static final long FASTEST_INTERVAL = 1000 * 5;
-	Button btnFusedLocation;
-	TextView tvLocation;
-	LocationRequest mLocationRequest;
-	GoogleApiClient mGoogleApiClient;
-	Location mCurrentLocation;
-	String mLastUpdateTime;
-	
-	protected void createLocationRequest() {
-		mLocationRequest = new LocationRequest();
-		mLocationRequest.setInterval(INTERVAL);
-		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-	}
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		//show error dialog if GoolglePlayServices not available
-		if (!isGooglePlayServicesAvailable()) {
-			finish();
-		}
-		createLocationRequest();
-		mGoogleApiClient = new GoogleApiClient.Builder(this)
-		.addApi(LocationServices.API)
-		.addConnectionCallbacks(this)
-		.addOnConnectionFailedListener(this)
-		.build();
-		
-		setContentView(R.layout.activity_location);
-		tvLocation = (TextView) findViewById(R.id.tvLocation);
-		
-		btnFusedLocation = (Button) findViewById(R.id.btnShowLocation);
-		btnFusedLocation.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				updateUI();
-			}
-		});	
-	}
-	
-	@Override
-	public void onStart() {
-		super.onStart();
-		mGoogleApiClient.connect();
-	}
-	
-	@Override
-	public void onStop() {
-		super.onStop();
-		mGoogleApiClient.disconnect();
-	}
-	
-	private boolean isGooglePlayServicesAvailable() {
-		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		if (ConnectionResult.SUCCESS == status) {
-			return true;
-		} else {
-			GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
-			return false;
-		}
-	}
-	
-	@Override
-	public void onConnected(Bundle bundle) {
-		startLocationUpdates();
-	}
-	
-	protected void startLocationUpdates() {
-		if (ActivityCompat.checkSelfPermission(this, 
-		Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && 
-		ActivityCompat.checkSelfPermission(this, 
-		Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-		// TODO: Consider calling
-		//    ActivityCompat#requestPermissions
-		// here to request the missing permissions, and then overriding
-		//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-		//                                          int[] grantResults)
-		// to handle the case where the user grants the permission. See the documentation
-		// for ActivityCompat#requestPermissions for more details.
-			return;
-		}
-		PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
-		mGoogleApiClient, mLocationRequest, this);
-	}
-	
-	@Override
-	public void onConnectionSuspended(int i) {
-	
-	}
-	
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
-	
-	}
-	
-	@Override
-	public void onLocationChanged(Location location) {
-		mCurrentLocation = location;
-		mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-		updateUI();
-	}
-	
-	private void updateUI() {
-		if (null != mCurrentLocation) {
-			String lat = String.valueOf(mCurrentLocation.getLatitude());
-			String lng = String.valueOf(mCurrentLocation.getLongitude());
-			tvLocation.setText("At Time: " + mLastUpdateTime + "\n" +
-			"Latitude: " + lat + "\n" +
-			"Longitude: " + lng + "\n" +
-			"Accuracy: " + mCurrentLocation.getAccuracy() + "\n" +
-			"Provider: " + mCurrentLocation.getProvider());
-		} else {
-		}
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		stopLocationUpdates();
-	}
-	
-	protected void stopLocationUpdates() {
-		LocationServices.FusedLocationApi.removeLocationUpdates(
-		mGoogleApiClient, this);
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (mGoogleApiClient.isConnected()) {
-			startLocationUpdates();
-		}
-	}
-}
-\end{lstlisting}
-
-\subsection{XML-разметка приложения}
-
-Ниже приведена XML-разметка приложения.
-
-\lstset{ %
-	% \usepackage{color} or \usepackage{xcolor}; should come as last argument
-	basicstyle=\ttfamily\footnotesize,
-	breakatwhitespace=false,
-	breaklines=true,
-	captionpos=b,
-	deletekeywords={...},
-	escapeinside={\%*}{*)},
-	extendedchars=true,
-	keepspaces=true,
-	language=C,
-	morekeywords={*,...},
-	showspaces=false,
-	showstringspaces=false,
-	showtabs=false,
-	numbers=none,
-	numbersep=8pt,
-	tabsize=4,
-	frame=lines,	
-	title=\lstname
-}
-
-
-\begin{lstlisting}[caption=Разметка прилжения из activity\_location.xml]
-<?xml version="1.0" encoding="utf-8"?>
-	<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		tools:context=".LocationActivity">
-	
-	<TextView
-		android:id="@+id/textView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_marginTop="45dp"
-		android:text="@string/locationTxt"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-	
-	<Button
-		android:id="@+id/btnShowLocation"
-		style="?android:attr/buttonStyleSmall"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/textView"
-		android:layout_centerHorizontal="true"
-		android:layout_marginTop="270dp"
-		android:background="#ffff1a7c"
-		android:text="Show Location"
-		android:textColor="#ffffffff"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
-	
-	<TextView
-		android:id="@+id/tvLocation"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:layout_marginTop="18dp"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/textView" />
-</android.support.constraint.ConstraintLayout>
-\end{lstlisting}
-
-
+Spyzie является полным устройство слежения приложения ,
+ которое позволит вам получить доступ к существенной информации , 
+ относящейся к устройству в одном месте. Очень проста в использовании, 
+ имеет веб-интерфейс для пользователя панель управления , которая может быть 
+ доступна практически на любом устройстве. Приложение может быть использовано для 
+ получения обновления местоположения в режиме реального времени и 
+ позволяет доступ важных данных (например , сообщения, фотографии, заметки и многое другое) на устройстве.\cite{review5}
+ \begin{figure}
+ 	\centering
+ 	\includegraphics[width=10.94cm]{images/spy-location.jpg}
+ 	\caption{Spyzie}
+ 	\label{fig:card}
+ \end{figure}
+\subsection{Жизнь 360}
+Жизнь 360 является полной семьей отслеживания приложения , которое поставляется с большим количеством дополнительных функций. Вы можете легко добавить круги для вашей семьи и друзей , чтобы знать свои последние места. С его помощью вы также можете получить журнал своих прошлых мест , а также. Это один из лучших Android приложений GPS трекер, который поставляется с дополнительной поддержкой вождения. Он может обнаружить сбой, отправить экстренное сообщение, и проанализировать ваш шаблон вождения.\cite{review5}
 \begin{figure}
 	\centering
-	\includegraphics[width=10.94cm]{images/Screenshot_2018-12-07-12-01-59.png}
-	\caption{Внешний вид тестового приложения при работе}
+	\includegraphics[width=10.94cm]{images/15023617296655.jpg}
+	\caption{Жизнь 360}
+	\label{fig:card}
+\end{figure}
+\subsection{GPS Phone Tracker}
+GPS Phone Tracker является одним из старейших и наиболее широко используется следящий Android устройства приложений там. То , что делает его одним из лучших следящих приложений Android GPS являются его легко возможности подключения, точные результаты и бесшовные использования. Можно использовать приложение , чтобы получить точное местоположение своих друзей и семьи. Она также имеет функцию отслеживания устройства , чтобы получить обновление в режиме реального времени для потерянного телефона Android.\cite{review5}
+\begin{figure}
+	\centering
+	\includegraphics[width=10.94cm]{images/15023616915620.jpg}
+	\caption{GPS Phone Tracker}
+	\label{fig:card}
+\end{figure}
+\subsection{Glympse}
+Glympse является все-в-один GPS трекер для Android , который будет отслеживать местонахождение без вторжения в вашу частную жизнь. Он может быть использован для отслеживания доставки, запросить местоположение ваших друзей или сообщить своей семье и коллегам о своем местонахождении. Приложение также может быть использовано для отслеживания устройства , чтобы защитить его от кражи.\cite{review5}
+\begin{figure}
+	\centering
+	\includegraphics[width=10.94cm]{images/15023616597135.jpg}
+	\caption{Glympse}
+	\label{fig:card}
+\end{figure}
+\subsection{Где мой Droid}
+Если вы ищете надежный способ , чтобы найти телефон удаленно, то вы должны обязательно дать Где мой Droid попробовать. GPS трекер для Android уже используется миллионами людей во всем мире , чтобы получить в режиме реального времени и точное местоположение своего устройства. Он имеет отличную функцию защиты от кражи с пассивными геоданных и гео-ограждением собственности.\cite{review5}
+\begin{figure}
+	\centering
+	\includegraphics[width=10.94cm]{images/15023616093087.jpg}
+	\caption{Где мой Droid}
 	\label{fig:card}
 \end{figure}
 
+\pagebreak
 
+\section{Алгоритм получение координат}
+\subsection{Описание алгоритма}
+Приложение запрашивает у android-устройства разрешение на получение
+данных о местоположение пользователя. Если оно получено, то
+запускается опрос координат с определенным интервалом. С помощью
+обработчиков событий можно получить новые координаты, как только они
+изменились. Разработчик может выбирать частоту обновления и точность 
+местоположения. Они должны быть такими, чтобы приложение было 
+энергоэффективным, но при этом погрешность кооординат не была 
+слишком большой. Данные о координатах устройство получает с помощью
+GPS-модуля или информации о подключении к Интернету.\cite{documentation}
 %%% Обзор                   %%%
 %%%                         %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -496,8 +279,12 @@ GoogleApiClient.OnConnectionFailedListener {
 %%% Результаты               %%%
 %%%                          %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+\pagebreak
+\section{Приложение}
+\subsection{Java-код}
+\lstinputlisting[language=Java]{../app/src/main/java/com/beginerdranch/android/myapplication/LocationActivity.java}
+\subsection{XML-разметка}
+\lstinputlisting{../app/src/main/res/layout/activity_location.xml}
 \pagebreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%                          %%%
@@ -513,9 +300,17 @@ GoogleApiClient.OnConnectionFailedListener {
 Геотрекер - GPS трекер - Всё о пройденном пути [Электронный ресурс] : [сайт] - Электрон. дан. 
 - Режим доступа:http://helpix.ru/appinion/201806/2160-geotreker\_-\_gps\_treker-vsjo\_o\_projdennom\_puti.html - Загл. с экрана.
 
+\bibitem{review5}
+5 лучших GPS приложения Tracker для Android в 2018 году [Электронный ресурс] : [сайт] - Электрон. дан. 
+- Режим доступа:http://global.spyzie.biz/ru/android-tracker/best-gps-tracker-apps-for-android.html - Загл. с экрана.
+
 \bibitem{documentation}
 Android Developers [Электронный ресурс] : [сайт] - Электрон. дан. 
 - Режим доступа:https://developer.android.com/ - Загл. с экрана.
+
+\bibitem{playmarket}
+Google Play [Электронный ресурс] : [сайт] - Электрон. дан. 
+- Режим доступа:https://play.google.com - Загл. с экрана.
 
 \bibitem{book}
 Филлипс Б., Стюарт К., Марсианко К. {\it Android программирование для профессионалов} М.: Питер. 2017 --- 687 с.
