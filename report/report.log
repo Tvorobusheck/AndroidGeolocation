@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6300 64-bit) (preloaded format=pdflatex 2017.11.18)  12 DEC 2018 21:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6300 64-bit) (preloaded format=pdflatex 2017.11.18)  12 DEC 2018 21:36
 entering extended mode
 **./report.tex
 (report.tex
@@ -339,42 +339,42 @@ Package pdftex.def Info: images/example.png used on input line 133.
 File: images/spy-location.jpg Graphic file (type jpg)
 
 <use images/spy-location.jpg>
-Package pdftex.def Info: images/spy-location.jpg used on input line 170.
+Package pdftex.def Info: images/spy-location.jpg used on input line 171.
 (pdftex.def)             Requested size: 170.71074pt x 227.6223pt.
 
 <images/15023617296655.jpg, id=20, 501.875pt x 391.4625pt>
 File: images/15023617296655.jpg Graphic file (type jpg)
 
 <use images/15023617296655.jpg>
-Package pdftex.def Info: images/15023617296655.jpg used on input line 178.
+Package pdftex.def Info: images/15023617296655.jpg used on input line 179.
 (pdftex.def)             Requested size: 284.54012pt x 199.17134pt.
  [4 <./images/spy-location.jpg>]
 <images/15023616915620.jpg, id=25, 328.97906pt x 276.28218pt>
 File: images/15023616915620.jpg Graphic file (type jpg)
 
 <use images/15023616915620.jpg>
-Package pdftex.def Info: images/15023616915620.jpg used on input line 186.
+Package pdftex.def Info: images/15023616915620.jpg used on input line 187.
 (pdftex.def)             Requested size: 256.08057pt x 199.16751pt.
  [5 <./images/15023617296655.jpg>]
 <images/15023616597135.jpg, id=29, 493.0922pt x 274.77657pt>
 File: images/15023616597135.jpg Graphic file (type jpg)
 
 <use images/15023616597135.jpg>
-Package pdftex.def Info: images/15023616597135.jpg used on input line 194.
+Package pdftex.def Info: images/15023616597135.jpg used on input line 195.
 (pdftex.def)             Requested size: 369.901pt x 199.17645pt.
 
 <images/15023616093087.jpg, id=30, 485.56406pt x 268.75406pt>
 File: images/15023616093087.jpg Graphic file (type jpg)
 
 <use images/15023616093087.jpg>
-Package pdftex.def Info: images/15023616093087.jpg used on input line 202.
+Package pdftex.def Info: images/15023616093087.jpg used on input line 203.
 (pdftex.def)             Requested size: 369.88455pt x 199.17015pt.
  [6 <./images/15023616915620.jpg> <./images/15023616597135.jpg>] [7 <./images/1
 5023616093087.jpg>] [8] [9] [10]
 (D:\Programs\MiKTeX\tex\latex\listings\lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
-LaTeX Font Info:    Try loading font information for T2A+cmtt on input line 288
+LaTeX Font Info:    Try loading font information for T2A+cmtt on input line 289
 .
 
 (D:\Programs\MiKTeX\tex\latex\cyrillic\t2acmtt.fd
@@ -386,7 +386,7 @@ LaTeX Font Info:    Font shape `T2A/cmtt/bx/n' in size <11> not available
 (Font)              Font shape `T2A/cmtt/m/n' tried instead on input line 1.
  [11] [12] [13] [14] [15])
 (../app/src/main/res/layout/activity_location.xml [16]) [17]
-Underfull \hbox (badness 1924) in paragraph at lines 315--317
+Underfull \hbox (badness 1924) in paragraph at lines 316--318
 []\T2A/cmr/m/n/12 Google Play [Ёлек-трон-ный ре-сурс] : [сайт] - Ёлек-трон. дан
 . - –е-жим до-сту-
  []
@@ -415,7 +415,7 @@ D:/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1440.pfb><D:/Programs/MiKTeX
 /fonts/type1/public/cm-super/sfti1095.pfb><D:/Programs/MiKTeX/fonts/type1/publi
 c/cm-super/sfti1200.pfb><D:/Programs/MiKTeX/fonts/type1/public/cm-super/sftt109
 5.pfb>
-Output written on report.pdf (18 pages, 1143762 bytes).
+Output written on report.pdf (18 pages, 1143557 bytes).
 PDF statistics:
  115 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
