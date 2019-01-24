@@ -3,6 +3,8 @@ package com.beginerdranch.android.myapplication;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -23,7 +26,6 @@ import com.google.android.gms.location.LocationServices;
 
 import java.text.DateFormat;
 import java.util.Date;
-
 public class LocationActivity extends Activity implements
         LocationListener,
         GoogleApiClient.ConnectionCallbacks,
@@ -69,9 +71,10 @@ public class LocationActivity extends Activity implements
             @Override
             public void onClick(View arg0) {
                 updateUI();
+                Log.d(TAG, "Intent must works");
+                startService(new Intent(LocationActivity.this, MyService.class));
             }
         });
-
     }
 
     @Override
