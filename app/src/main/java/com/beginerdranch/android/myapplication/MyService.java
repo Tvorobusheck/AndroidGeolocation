@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -24,8 +25,11 @@ import com.google.android.gms.location.LocationServices;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
@@ -40,12 +44,17 @@ public class MyService extends Service  implements
     private static final String TAG = "LocationActivity";
     private static final long INTERVAL = 1000 * 10;
     private static final long FASTEST_INTERVAL = 1000 * 5;
-    private Context mContext;
+    private static final long LOCATION_MAX_SIZE = 200;
+    private static Context mContext;
 
-    LocationRequest mLocationRequest;
-    GoogleApiClient mGoogleApiClient;
-    Location mCurrentLocation;
+    private static LocationRequest mLocationRequest;
+    private static GoogleApiClient mGoogleApiClient;
+    private static Location mCurrentLocation;
+    private static List<Pair<Location, Date>> locations = new ArrayList<>();
 
+    public static List<Pair<Location, Date>> getLocationList(){
+        return locations;
+    }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(INTERVAL);
@@ -93,8 +102,11 @@ public class MyService extends Service  implements
             String lat = String.valueOf(mCurrentLocation.getLatitude());
             String lng = String.valueOf(mCurrentLocation.getLongitude());
             mContext = getApplicationContext();
+            locations.add(Pair.create(mCurrentLocation, Calendar.getInstance().getTime()));
+            if(locations.size() > LOCATION_MAX_SIZE)
+                locations.remove(0);
             Log.d(TAG, "Latitude is: " + lat + "\n" +
-                "Longitude is: " + lng);
+                    "Longitude is: " + lng);
         } else {
             Log.d(TAG, "location is null ...............");
         }
@@ -120,14 +132,14 @@ public class MyService extends Service  implements
         mGoogleApiClient.connect();
         if(isGooglePlayServicesAvailable()) {
             Toast.makeText(getApplicationContext(), "GooglePlay works", Toast.LENGTH_SHORT).show();
-           // while(!isRunning) {
-                if (mGoogleApiClient.isConnected()) {
-                    startLocationUpdates();
-                    isRunning = true;
-                    Log.d(TAG, "Location update resumed .....................");
-                } else {
-                    Log.d(LOG_TAG, "Location update not started");
-                }
+            // while(!isRunning) {
+            if (mGoogleApiClient.isConnected()) {
+                startLocationUpdates();
+                isRunning = true;
+                Log.d(TAG, "Location update resumed .....................");
+            } else {
+                Log.d(LOG_TAG, "Location update not started");
+            }
             //}
         }
         else
@@ -135,15 +147,6 @@ public class MyService extends Service  implements
 
         Log.d(LOG_TAG, "Service works!");
     }
-
-//    @Override
-//    public int onStartCommand(Intent intent, int flags, int startId) {
-//        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-//        if(!isRunning){
-//            isRunning = true;
-//        }
-//        return Service.START_STICKY;
-//    }
 
     @Override
     public void onDestroy() {
@@ -171,13 +174,4 @@ public class MyService extends Service  implements
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "Connection failed: " + connectionResult.toString());
     }
-
-//    void someTask() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run(){
-//                while(true);
-//            }
-//        }).start();
-//    }
 }
