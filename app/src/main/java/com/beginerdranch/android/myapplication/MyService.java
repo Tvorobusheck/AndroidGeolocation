@@ -1,4 +1,6 @@
 package com.beginerdranch.android.myapplication;
+
+
 import android.Manifest;
 import android.app.Service;
 import android.content.Context;
@@ -23,38 +25,26 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static android.content.ContentValues.TAG;
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class MyService extends Service  implements
         LocationListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    String mLastUpdateTime;
-    private static final String TAG = "LocationActivity";
     private static final long INTERVAL = 1000 * 10;
     private static final long FASTEST_INTERVAL = 1000 * 5;
-    private static final long LOCATION_MAX_SIZE = 200;
-    private static Context mContext;
 
     private static LocationRequest mLocationRequest;
     private static GoogleApiClient mGoogleApiClient;
     private static Location mCurrentLocation;
-    private static List<Pair<Location, Date>> locations = new ArrayList<>();
 
-    public static List<Pair<Location, Date>> getLocationList(){
-        return locations;
-    }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(INTERVAL);
@@ -67,13 +57,15 @@ public class MyService extends Service  implements
         if (ConnectionResult.SUCCESS == status) {
             return true;
         } else {
-//            GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
             return false;
         }
     }
 
     protected void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -83,46 +75,58 @@ public class MyService extends Service  implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
         PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
-        Log.d(TAG, "Location update started ..............: ");
+        Log.d(LOG_TAG, "Location update started");
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "Firing onLocationChanged..............................................");
+        Log.d(LOG_TAG, "Firing onLocationChanged");
         mCurrentLocation = location;
-        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        updateUI();
+        updateLocations();
     }
-
-    private void updateUI() {
-        Log.d(TAG, "UI update initiated .............");
+    private void addLocationPoint(String lat, String lng, String time){
+        try {
+            /** TODO
+             * It rewrites file, change on append
+             */
+            OutputStreamWriter outputStreamWriter =
+                    new OutputStreamWriter(this.openFileOutput(getString(R.string.locationTxt),
+                            Context.MODE_PRIVATE));
+            outputStreamWriter.append(time + "\n" +
+                                        lat + "\n" +
+                                        lng);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+    private void updateLocations() {
+        Log.d(LOG_TAG, "UI update initiated");
         if (null != mCurrentLocation) {
             String lat = String.valueOf(mCurrentLocation.getLatitude());
             String lng = String.valueOf(mCurrentLocation.getLongitude());
-            mContext = getApplicationContext();
-            locations.add(Pair.create(mCurrentLocation, Calendar.getInstance().getTime()));
-            if(locations.size() > LOCATION_MAX_SIZE)
-                locations.remove(0);
-            Log.d(TAG, "Latitude is: " + lat + "\n" +
+            addLocationPoint(lat, lng, Calendar.getInstance().getTime().toString());
+            Log.d(LOG_TAG, "Latitude is: " + lat + "\n" +
                     "Longitude is: " + lng);
         } else {
-            Log.d(TAG, "location is null ...............");
+            Log.d(LOG_TAG, "location is null");
         }
     }
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGoogleApiClient, this);
-        Log.d(TAG, "Location update stopped .......................");
+        Log.d(LOG_TAG, "Location update stopped");
     }
 
     final String LOG_TAG = "ServiceLogs";
-    private boolean isRunning = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = getApplicationContext();
         createLocationRequest();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -131,19 +135,18 @@ public class MyService extends Service  implements
                 .build();
         mGoogleApiClient.connect();
         if(isGooglePlayServicesAvailable()) {
-            Toast.makeText(getApplicationContext(), "GooglePlay works", Toast.LENGTH_SHORT).show();
-            // while(!isRunning) {
+            Toast.makeText(getApplicationContext(), "GooglePlay works",
+                    Toast.LENGTH_SHORT).show();
             if (mGoogleApiClient.isConnected()) {
                 startLocationUpdates();
-                isRunning = true;
-                Log.d(TAG, "Location update resumed .....................");
+                Log.d(LOG_TAG, "Location update resumed");
             } else {
                 Log.d(LOG_TAG, "Location update not started");
             }
-            //}
         }
         else
-            Toast.makeText(getApplicationContext(), "GooglePlay unavaible", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GooglePlay unavaible",
+                    Toast.LENGTH_SHORT).show();
 
         Log.d(LOG_TAG, "Service works!");
     }
@@ -151,7 +154,7 @@ public class MyService extends Service  implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isRunning = false;
+        stopLocationUpdates();
         Log.d(LOG_TAG, "onDestroy");
     }
 
@@ -163,7 +166,7 @@ public class MyService extends Service  implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         startLocationUpdates();
-        Log.d(TAG, "onConnected - isConnected ...............: " + mGoogleApiClient.isConnected());
+        Log.d(LOG_TAG, "onConnected - isConnected: " + mGoogleApiClient.isConnected());
     }
 
     @Override
@@ -172,6 +175,6 @@ public class MyService extends Service  implements
     }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "Connection failed: " + connectionResult.toString());
+        Log.d(LOG_TAG, "Connection failed: " + connectionResult.toString());
     }
 }

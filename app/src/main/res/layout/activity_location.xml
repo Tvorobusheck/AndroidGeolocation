@@ -7,12 +7,12 @@
     tools:context=".LocationActivity">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp"
-        android:text="@string/locationTxt"
+        android:id="@+id/tvLocation"
+        android:layout_width="fill_parent"
+        android:layout_height="94dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="52dp"
+        android:text="tvLocation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,21 +21,38 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="270dp"
-        android:background="#ffff1a7c"
+        android:background="@color/colorAccent"
         android:text="Show Location"
         android:textColor="#ffffffff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
 
-    <TextView
-        android:id="@+id/tvLocation"
+    <Button
+        android:id="@+id/btnRestartUpdates"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="18dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="332dp"
+        android:background="@color/colorAccent"
+        android:text="Restart Updates"
+        android:textColor="#ffffffff"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
+
+    <Button
+        android:id="@+id/btnStopUpdates"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="392dp"
+        android:background="@color/colorAccent"
+        android:text="Stop updates"
+        android:textColor="#ffffffff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
+
 </android.support.constraint.ConstraintLayout>
