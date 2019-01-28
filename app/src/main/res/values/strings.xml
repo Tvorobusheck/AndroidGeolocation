@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">EnLo</string>
     <string name="correct">It works</string>
     <string name="locationTxt">Locations.txt</string>
     <string name="action_settings">Settings</string>

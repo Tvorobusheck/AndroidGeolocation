@@ -89,15 +89,12 @@ public class MyService extends Service  implements
     }
     private void addLocationPoint(String lat, String lng, String time){
         try {
-            /** TODO
-             * It rewrites file, change on append
-             */
             OutputStreamWriter outputStreamWriter =
                     new OutputStreamWriter(this.openFileOutput(getString(R.string.locationTxt),
-                            Context.MODE_PRIVATE));
-            outputStreamWriter.append(time + "\n" +
+                            Context.MODE_APPEND));
+            outputStreamWriter.write(time + "\n" +
                                         lat + "\n" +
-                                        lng);
+                                        lng + "\n");
             outputStreamWriter.close();
         }
         catch (IOException e) {
