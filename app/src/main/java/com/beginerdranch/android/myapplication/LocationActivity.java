@@ -4,7 +4,6 @@ package com.beginerdranch.android.myapplication;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -29,10 +28,13 @@ public class LocationActivity extends Activity{
     private static Button btnFusedLocation;
     private static Button btnStopUpdates;
     private static Button btnRestartUpdates;
+    private static Button btnShowMap;
     private static TextView tvLocation;
     private static List<Pair<Date, Pair<Double, Double>>> listOfLocationPoints =
             Collections.emptyList();
-
+    public static List<Pair<Date, Pair<Double, Double>>> getListOfLocationPoints(){
+        return listOfLocationPoints;
+    }
     private void readFromFile(Context context) {
         try {
             InputStream inputStream = context.openFileInput(getString(R.string.locationTxt));
@@ -87,6 +89,15 @@ public class LocationActivity extends Activity{
         btnStopUpdates = (Button) findViewById(R.id.btnStopUpdates);
         btnRestartUpdates = (Button) findViewById(R.id.btnRestartUpdates);
         btnFusedLocation = (Button) findViewById(R.id.btnShowLocation);
+        btnShowMap = (Button) findViewById(R.id.btnShowMap);
+        btnShowMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LocationActivity.this, MapsActivity.class);
+                readFromFile(getApplicationContext());
+                startActivity(intent);
+            }
+        });
         btnFusedLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -114,7 +125,7 @@ public class LocationActivity extends Activity{
         btnStopUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopService(new Intent(getApplicationContext(), MyService.class));
+                stopService(new Intent(LocationActivity.this, MyService.class));
             }
         });
     }
