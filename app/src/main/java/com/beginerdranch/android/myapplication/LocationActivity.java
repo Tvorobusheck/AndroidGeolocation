@@ -2,9 +2,12 @@ package com.beginerdranch.android.myapplication;
 
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -30,55 +33,7 @@ public class LocationActivity extends Activity{
     private static Button btnRestartUpdates;
     private static Button btnShowMap;
     private static TextView tvLocation;
-    private static List<Pair<Date, Pair<Double, Double>>> listOfLocationPoints =
-            Collections.emptyList();
-    public static List<Pair<Date, Pair<Double, Double>>> getListOfLocationPoints(){
-        return listOfLocationPoints;
-    }
-    private void readFromFile(Context context) {
-        try {
-            InputStream inputStream = context.openFileInput(getString(R.string.locationTxt));
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                int count = 0;
-                Pair<Date, Pair<Double, Double>> location;
-                Date date = new Date(0);
-                double lat = 0;
-                double lng = 0;
-                listOfLocationPoints = new ArrayList<>();
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    count++;
-                    Log.d(TAG, "Recived string from file");
-                    switch (count){
-                        case 1:
-                            date = new Date(Date.parse(receiveString));
-                            break;
-                        case 2:
-                            lat = Double.parseDouble(receiveString);
-                            break;
-                        case 3:
-                            lng = Double.parseDouble(receiveString);
-                            location = Pair.create(date, Pair.create(lat, lng));
-                            listOfLocationPoints.add(location);
-                            count = 0;
-                            break;
-                        default:
-                            Log.e(TAG, "Count has unexcepted value");
-                    }
-                }
-                inputStream.close();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-        Log.d(TAG, "Size of list is " + listOfLocationPoints.size());
-    }
+    private static Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,18 +45,19 @@ public class LocationActivity extends Activity{
         btnRestartUpdates = (Button) findViewById(R.id.btnRestartUpdates);
         btnFusedLocation = (Button) findViewById(R.id.btnShowLocation);
         btnShowMap = (Button) findViewById(R.id.btnShowMap);
+        mIntent = new Intent(this, MyService.class);
         btnShowMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LocationActivity.this, MapsActivity.class);
-                readFromFile(getApplicationContext());
                 startActivity(intent);
             }
         });
         btnFusedLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                readFromFile(getApplicationContext());
+                ArrayList<Pair<Date, Pair<Double, Double>>> listOfLocationPoints =
+                        MyService.getLocationList(getApplicationContext());
                 if(listOfLocationPoints.isEmpty())
                     tvLocation.setText("Location unknown");
                 else{
@@ -119,13 +75,13 @@ public class LocationActivity extends Activity{
         btnRestartUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startService(new Intent(LocationActivity.this, MyService.class));
+                startService(mIntent);
             }
         });
         btnStopUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopService(new Intent(LocationActivity.this, MyService.class));
+                stopService(mIntent);
             }
         });
     }

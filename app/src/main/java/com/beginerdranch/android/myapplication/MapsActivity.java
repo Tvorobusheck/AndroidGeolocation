@@ -9,14 +9,17 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Pair;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +27,7 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    List<Pair<Date, Pair<Double, Double>>> locations = Collections.emptyList();
+    ArrayList<Pair<Date, Pair<Double, Double>>> locations = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        locations = LocationActivity.getListOfLocationPoints();
+        locations = MyService.getLocationList(getApplicationContext());
     }
 
 
@@ -58,15 +61,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 options.add(new LatLng(locPoint.second.first, locPoint.second.second));
             }
             LatLng lastpos = new LatLng(locations.get(locations.size() - 1).second.first,
-                                    locations.get(locations.size() - 1).second.first);
+                                    locations.get(locations.size() - 1).second.second);
             mMap.addPolyline(options);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(lastpos));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(lastpos, 14);
+            mMap.animateCamera(cameraUpdate);
         }
     }
 
     public void setUpMap() {
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.setTrafficEnabled(true);
         mMap.setIndoorEnabled(true);
         mMap.setBuildingsEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);

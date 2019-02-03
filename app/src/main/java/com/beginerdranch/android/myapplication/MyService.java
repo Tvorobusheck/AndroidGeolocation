@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -14,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -25,22 +25,31 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class MyService extends Service  implements
         LocationListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final long INTERVAL = 1000 * 10;
-    private static final long FASTEST_INTERVAL = 1000 * 5;
-
+    private static final long OPTIM_POINTS = 5;
+    private static final long INTERVAL = 1000 * 60;
+    private static final long FASTEST_INTERVAL = 1000 * 30;
+    private static final long MAX_POINTS = 100000;
+    private static final long MIN_POINTS = 50000;
     private static LocationRequest mLocationRequest;
     private static GoogleApiClient mGoogleApiClient;
     private static Location mCurrentLocation;
@@ -87,8 +96,19 @@ public class MyService extends Service  implements
         mCurrentLocation = location;
         updateLocations();
     }
-    private void addLocationPoint(String lat, String lng, String time){
+    private void addLocationPoint(String lat, String lng, String time) throws IOException {
         try {
+            /**TODO
+             * make with saving at least MIN_POINTS
+             */
+            //clear file if too many points
+            if(readFromFile(getApplicationContext()).size() > MAX_POINTS){
+                OutputStreamWriter outputStreamWriter =
+                        new OutputStreamWriter(this.openFileOutput(getString(R.string.locationTxt),
+                                Context.MODE_PRIVATE));
+                outputStreamWriter.write("");
+                outputStreamWriter.close();
+            }
             OutputStreamWriter outputStreamWriter =
                     new OutputStreamWriter(this.openFileOutput(getString(R.string.locationTxt),
                             Context.MODE_APPEND));
@@ -101,12 +121,91 @@ public class MyService extends Service  implements
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
+
+    private static ArrayList<Pair<Date, Pair<Double, Double>>> readFromFile(Context context) {
+        ArrayList<Pair<Date, Pair<Double, Double>>> listOfLocationPoints = new ArrayList<>();
+        try {
+            InputStream inputStream = context.openFileInput(context.getString(R.string.locationTxt));
+
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                int count = 0;
+                Pair<Date, Pair<Double, Double>> location;
+                Date date = new Date(0);
+                double lat = 0;
+                double lng = 0;
+                listOfLocationPoints = new ArrayList<>();
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    count++;
+                    Log.d(TAG, "Recived string from file");
+                    switch (count) {
+                        case 1:
+                            date = new Date(Date.parse(receiveString));
+                            break;
+                        case 2:
+                            lat = Double.parseDouble(receiveString);
+                            break;
+                        case 3:
+                            lng = Double.parseDouble(receiveString);
+                            location = Pair.create(date, Pair.create(lat, lng));
+                            listOfLocationPoints.add(location);
+                            count = 0;
+                            break;
+                        default:
+                            Log.e(TAG, "Count has unexcepted value");
+                    }
+                }
+                inputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+        Log.d(TAG, "Size of list is " + listOfLocationPoints.size());
+        return listOfLocationPoints;
+    }
+    private static ArrayList<Pair<Date, Pair<Double, Double>>> optimizeList(ArrayList<Pair<Date, Pair<Double, Double>>> locations){
+        ArrayList<Pair<Date, Pair<Double, Double>>> result = new ArrayList<>();
+        for(int i = 0; i < locations.size(); i++){
+            int cnt = 1;
+            double summ_x = locations.get(i).second.first;
+            double summ_y = locations.get(i).second.second;
+            for(int j = i - 1; j >= i - OPTIM_POINTS; j--){
+                if(j < 0)
+                    break;
+                summ_x += locations.get(j).second.first;
+                summ_y += locations.get(j).second.second;
+                cnt++;
+            }
+            for(int j = i + 1; j <= i + OPTIM_POINTS; j++){
+                if(j >= locations.size())
+                    break;
+                summ_x += locations.get(j).second.first;
+                summ_y += locations.get(j).second.second;
+                cnt++;
+            }
+            Pair<Date, Pair<Double, Double>> point = Pair.create(locations.get(i).first,
+                    Pair.create(summ_x / cnt, summ_y / cnt));
+            result.add(point);
+        }
+        return result;
+    }
+    public static ArrayList<Pair<Date, Pair<Double, Double>>> getLocationList (Context context){
+        return optimizeList(readFromFile(context));
+    }
     private void updateLocations() {
         Log.d(LOG_TAG, "UI update initiated");
         if (null != mCurrentLocation) {
             String lat = String.valueOf(mCurrentLocation.getLatitude());
             String lng = String.valueOf(mCurrentLocation.getLongitude());
-            addLocationPoint(lat, lng, Calendar.getInstance().getTime().toString());
+            try {
+                addLocationPoint(lat, lng, Calendar.getInstance().getTime().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Log.d(LOG_TAG, "Latitude is: " + lat + "\n" +
                     "Longitude is: " + lng);
         } else {
@@ -132,8 +231,6 @@ public class MyService extends Service  implements
                 .build();
         mGoogleApiClient.connect();
         if(isGooglePlayServicesAvailable()) {
-            Toast.makeText(getApplicationContext(), "GooglePlay works",
-                    Toast.LENGTH_SHORT).show();
             if (mGoogleApiClient.isConnected()) {
                 startLocationUpdates();
                 Log.d(LOG_TAG, "Location update resumed");
@@ -141,10 +238,6 @@ public class MyService extends Service  implements
                 Log.d(LOG_TAG, "Location update not started");
             }
         }
-        else
-            Toast.makeText(getApplicationContext(), "GooglePlay unavaible",
-                    Toast.LENGTH_SHORT).show();
-
         Log.d(LOG_TAG, "Service works!");
     }
 
@@ -158,7 +251,12 @@ public class MyService extends Service  implements
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(LOG_TAG, "onBind");
-        return null;
+        return new LocalBinder();
+    }
+    public class LocalBinder extends Binder{
+        public MyService getInstance(){
+            return MyService.this;
+        }
     }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
