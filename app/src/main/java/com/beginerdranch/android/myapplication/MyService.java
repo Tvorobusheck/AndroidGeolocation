@@ -54,6 +54,18 @@ public class MyService extends Service  implements
     private static GoogleApiClient mGoogleApiClient;
     private static Location mCurrentLocation;
 
+    private static Date begDate = new Date(70, 01, 01, 0, 0, 0);
+    private static Date endDate = new Date(170, 01, 01, 0, 0, 0);
+
+    public static Pair<Date, Date> getDateBorders(){
+        return Pair.create(begDate, endDate);
+    }
+    public static void setBegDate(Date date){
+        begDate = date;
+    }
+    public static void setEndDate(Date date){
+        endDate = date;
+    }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(INTERVAL);
@@ -167,29 +179,53 @@ public class MyService extends Service  implements
         Log.d(TAG, "Size of list is " + listOfLocationPoints.size());
         return listOfLocationPoints;
     }
+    private static double getDist(Pair<Double, Double> fi,
+                                  Pair<Double, Double> se){
+        return Math.sqrt((fi.first - se.first) * (fi.first - se.first) +
+                (fi.second - se.second) * (fi.second - se.second));
+    }
+    private static boolean missedPoint(Pair<Double, Double> fi,
+                                       Pair<Double, Double> se,
+                                       Pair<Double, Double> main){
+        if(getDist(fi, main) + getDist(se, main) > 2 * getDist(fi, se))
+            return true;
+        else
+            return false;
+    }
     private static ArrayList<Pair<Date, Pair<Double, Double>>> optimizeList(ArrayList<Pair<Date, Pair<Double, Double>>> locations){
         ArrayList<Pair<Date, Pair<Double, Double>>> result = new ArrayList<>();
         for(int i = 0; i < locations.size(); i++){
-            int cnt = 1;
-            double summ_x = locations.get(i).second.first;
-            double summ_y = locations.get(i).second.second;
-            for(int j = i - 1; j >= i - OPTIM_POINTS; j--){
-                if(j < 0)
-                    break;
-                summ_x += locations.get(j).second.first;
-                summ_y += locations.get(j).second.second;
-                cnt++;
+            Pair<Date, Pair<Double, Double>> point;
+            if(locations.size() > i + 1 && i - 1 >= 0 && missedPoint(locations.get(i - 1).second,
+                                                            locations.get(i + 1).second,
+                                                            locations.get(i).second)) {
+                int cnt = 0;
+                double summ_x = 0;
+                double summ_y = 0;
+                for (int j = i - 1; j >= i - OPTIM_POINTS; j--) {
+                    if (j < 0)
+                        break;
+                    summ_x += locations.get(j).second.first;
+                    summ_y += locations.get(j).second.second;
+                    cnt++;
+                }
+                for (int j = i + 1; j <= i + OPTIM_POINTS; j++) {
+                    if (j >= locations.size())
+                        break;
+                    summ_x += locations.get(j).second.first;
+                    summ_y += locations.get(j).second.second;
+                    cnt++;
+                }
+                point = Pair.create(locations.get(i).first,
+                        Pair.create(summ_x / cnt, summ_y / cnt));
             }
-            for(int j = i + 1; j <= i + OPTIM_POINTS; j++){
-                if(j >= locations.size())
-                    break;
-                summ_x += locations.get(j).second.first;
-                summ_y += locations.get(j).second.second;
-                cnt++;
-            }
-            Pair<Date, Pair<Double, Double>> point = Pair.create(locations.get(i).first,
-                    Pair.create(summ_x / cnt, summ_y / cnt));
-            result.add(point);
+            else
+                point = locations.get(i);
+            Log.d(TAG, "Two dates are: " + "\n" +
+                            begDate.toString() + "\n" +
+                            point.first.toString());
+            if(begDate.compareTo(point.first) <= 0 && endDate.compareTo(point.first) >= 0)
+               result.add(point);
         }
         return result;
     }

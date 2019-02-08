@@ -32,6 +32,7 @@ public class LocationActivity extends Activity{
     private static Button btnStopUpdates;
     private static Button btnRestartUpdates;
     private static Button btnShowMap;
+    private static Button btnSettings;
     private static TextView tvLocation;
     private static Intent mIntent;
 
@@ -45,6 +46,7 @@ public class LocationActivity extends Activity{
         btnRestartUpdates = (Button) findViewById(R.id.btnRestartUpdates);
         btnFusedLocation = (Button) findViewById(R.id.btnShowLocation);
         btnShowMap = (Button) findViewById(R.id.btnShowMap);
+        btnSettings = (Button) findViewById(R.id.btnSettings);
         mIntent = new Intent(this, MyService.class);
         btnShowMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +84,13 @@ public class LocationActivity extends Activity{
             @Override
             public void onClick(View v) {
                 stopService(mIntent);
+            }
+        });
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LocationActivity.this, SettingsActivity.class);
+                startActivity(intent);
             }
         });
     }
