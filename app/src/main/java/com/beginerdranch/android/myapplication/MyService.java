@@ -48,8 +48,6 @@ public class MyService extends Service  implements
     private static final long OPTIM_POINTS = 5;
     private static final long INTERVAL = 1000 * 60;
     private static final long FASTEST_INTERVAL = 1000 * 30;
-    private static final long MAX_POINTS = 100000;
-    private static final long MIN_POINTS = 50000;
     private static LocationRequest mLocationRequest;
     private static GoogleApiClient mGoogleApiClient;
     private static Location mCurrentLocation;
@@ -61,10 +59,19 @@ public class MyService extends Service  implements
         return Pair.create(begDate, endDate);
     }
     public static void setBegDate(Date date){
+        Log.d(TAG, "Your begin date is: " + date.toString());
         begDate = date;
     }
     public static void setEndDate(Date date){
+
+        Log.d(TAG, "Your end date is: " + date.toString());
         endDate = date;
+    }
+    public static Date getBegDate(){
+        return begDate;
+    }
+    public static Date getEndDate(){
+        return endDate;
     }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
@@ -110,17 +117,6 @@ public class MyService extends Service  implements
     }
     private void addLocationPoint(String lat, String lng, String time) throws IOException {
         try {
-            /**TODO
-             * make with saving at least MIN_POINTS
-             */
-            //clear file if too many points
-            if(readFromFile(getApplicationContext()).size() > MAX_POINTS){
-                OutputStreamWriter outputStreamWriter =
-                        new OutputStreamWriter(this.openFileOutput(getString(R.string.locationTxt),
-                                Context.MODE_PRIVATE));
-                outputStreamWriter.write("");
-                outputStreamWriter.close();
-            }
             OutputStreamWriter outputStreamWriter =
                     new OutputStreamWriter(this.openFileOutput(getString(R.string.locationTxt),
                             Context.MODE_APPEND));
