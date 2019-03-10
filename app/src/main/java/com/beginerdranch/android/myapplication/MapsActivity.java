@@ -27,7 +27,7 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    ArrayList<Pair<Date, Pair<Double, Double>>> locations = new ArrayList<>();
+    ArrayList<ArrayList<Pair<Date, Pair<Double, Double>>>> listOfTracks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        locations = MyService.getLocationList(getApplicationContext());
+        listOfTracks = MyService.getListOfTracks(MyService.getLocationList(getApplicationContext()));
     }
 
 
@@ -52,20 +52,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if(locations.size() > 0) {
-            mMap = googleMap;
-            setUpMap();
+        LatLng lastpos = new LatLng(0, 0);
+        for(int i = 0; i < listOfTracks.size(); i++) {
+            ArrayList<Pair<Date, Pair<Double, Double>>> locations = listOfTracks.get(i);
+            if (locations.size() > 0) {
+                mMap = googleMap;
+                setUpMap();
 
-            PolylineOptions options = new PolylineOptions().width(5).color(Color.RED);
-            for(Pair <Date, Pair<Double, Double>> locPoint: locations) {
-                options.add(new LatLng(locPoint.second.first, locPoint.second.second));
+                PolylineOptions options = new PolylineOptions().width(5).color(Color.RED);
+                for (Pair<Date, Pair<Double, Double>> locPoint : locations) {
+                    options.add(new LatLng(locPoint.second.first, locPoint.second.second));
+                }
+                lastpos = new LatLng(locations.get(locations.size() - 1).second.first,
+                        locations.get(locations.size() - 1).second.second);
+                mMap.addPolyline(options);
             }
-            LatLng lastpos = new LatLng(locations.get(locations.size() - 1).second.first,
-                                    locations.get(locations.size() - 1).second.second);
-            mMap.addPolyline(options);
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(lastpos, 14);
-            mMap.animateCamera(cameraUpdate);
         }
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(lastpos, 14);
+        mMap.animateCamera(cameraUpdate);
     }
 
     public void setUpMap() {

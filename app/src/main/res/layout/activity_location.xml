@@ -22,7 +22,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="368dp"
+        android:layout_marginTop="140dp"
         android:background="@color/colorAccent"
         android:text="Show Location"
         android:textColor="#ffffffff"
@@ -35,61 +35,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="304dp"
+        android:layout_marginTop="84dp"
         android:background="@color/colorAccent"
         android:text="Show Map"
-        android:textColor="#ffffffff"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
-
-    <Button
-        android:id="@+id/btnSetBeginDate"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:background="@color/colorAccent"
-        android:text="Set begin of track"
-        android:textColor="#ffffffff"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
-
-    <Button
-        android:id="@+id/btnSetBeginTime"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="76dp"
-        android:background="@color/colorAccent"
-        android:text="Set begin of track"
-        android:textColor="#ffffffff"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
-
-    <Button
-        android:id="@+id/btnSetEndDate"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="148dp"
-        android:background="@color/colorAccent"
-        android:text="Set end of track"
-        android:textColor="#ffffffff"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
-
-    <Button
-        android:id="@+id/btnSetEndTime"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="204dp"
-        android:background="@color/colorAccent"
-        android:text="Set end of track"
         android:textColor="#ffffffff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
@@ -100,7 +48,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="428dp"
+        android:layout_marginTop="192dp"
         android:background="@color/colorAccent"
         android:text="Restart Updates"
         android:textColor="#ffffffff"
@@ -113,34 +61,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="488dp"
+        android:layout_marginTop="252dp"
         android:background="@color/colorAccent"
         android:text="Stop updates"
         android:textColor="#ffffffff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="425dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="2dp"
-        android:text="Begin of track:"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="425dp"
-        android:layout_height="24dp"
-        android:text="End of track:"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSetBeginTime" />
 
 </android.support.constraint.ConstraintLayout>

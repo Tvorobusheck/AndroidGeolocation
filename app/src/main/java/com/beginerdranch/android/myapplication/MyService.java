@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
 
@@ -45,9 +46,9 @@ public class MyService extends Service  implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final long OPTIM_POINTS = 5;
-    private static final long INTERVAL = 1000 * 60;
-    private static final long FASTEST_INTERVAL = 1000 * 30;
+    private static final long OPTIM_POINTS = 1;
+    private static final long INTERVAL = 1000 * 5;
+    private static final long FASTEST_INTERVAL = 1000 * 3;
     private static LocationRequest mLocationRequest;
     private static GoogleApiClient mGoogleApiClient;
     private static Location mCurrentLocation;
@@ -192,42 +193,64 @@ public class MyService extends Service  implements
         ArrayList<Pair<Date, Pair<Double, Double>>> result = new ArrayList<>();
         for(int i = 0; i < locations.size(); i++){
             Pair<Date, Pair<Double, Double>> point;
-            if(locations.size() > i + 1 && i - 1 >= 0 && missedPoint(locations.get(i - 1).second,
-                                                            locations.get(i + 1).second,
-                                                            locations.get(i).second)) {
-                int cnt = 0;
-                double summ_x = 0;
-                double summ_y = 0;
-                for (int j = i - 1; j >= i - OPTIM_POINTS; j--) {
-                    if (j < 0)
-                        break;
-                    summ_x += locations.get(j).second.first;
-                    summ_y += locations.get(j).second.second;
-                    cnt++;
-                }
-                for (int j = i + 1; j <= i + OPTIM_POINTS; j++) {
-                    if (j >= locations.size())
-                        break;
-                    summ_x += locations.get(j).second.first;
-                    summ_y += locations.get(j).second.second;
-                    cnt++;
-                }
-                point = Pair.create(locations.get(i).first,
-                        Pair.create(summ_x / cnt, summ_y / cnt));
+            int cnt = 1;
+            double summ_x = locations.get(i).second.first;
+            double summ_y = locations.get(i).second.second;
+            for (int j = 1; j <= OPTIM_POINTS; j++) {
+                if (j > result.size() ||
+                        Math.abs(locations.get(i).first.getTime() - result.get(result.size() - j).first.getTime()) >
+                                (1 + OPTIM_POINTS) * INTERVAL)
+                    break;
+                summ_x += result.get(result.size() - j).second.first;
+                summ_y += result.get(result.size() - j).second.second;
+                cnt++;
             }
-            else
-                point = locations.get(i);
+            point = Pair.create(locations.get(i).first,
+                Pair.create(summ_x / cnt, summ_y / cnt));
             Log.d(TAG, "Two dates are: " + "\n" +
-                            begDate.toString() + "\n" +
-                            point.first.toString());
+                    begDate.toString() + "\n" +
+                    point.first.toString());
             if(begDate.compareTo(point.first) <= 0 && endDate.compareTo(point.first) >= 0)
-               result.add(point);
+                result.add(point);
         }
         return result;
     }
     public static ArrayList<Pair<Date, Pair<Double, Double>>> getLocationList (Context context){
         return optimizeList(readFromFile(context));
     }
+    public static ArrayList<ArrayList<Pair<Date, Pair<Double, Double>>>> getListOfTracks(ArrayList<Pair<Date, Pair<Double, Double>>> locations){
+        Pair<Date, Pair<Double, Double>> prev = null;
+        ArrayList<ArrayList<Pair<Date, Pair<Double, Double>>>> result = new ArrayList<>();
+        ArrayList<Pair<Date, Pair<Double, Double>>> curTrack = new ArrayList<>();
+        for(int i= 0; i < locations.size(); i++)
+            if(i == 0) {
+                curTrack = new ArrayList<>();
+                prev = locations.get(i);
+            }
+            else{
+                Pair<Date, Pair<Double, Double>> cur = locations.get(i);
+                if(checkSpeed(prev, cur, 2)){
+                    if(curTrack.size() > 1){
+                        result.add(curTrack);
+                    }
+                    curTrack = new ArrayList<>();
+                }
+                curTrack.add(cur);
+                prev = cur;
+            }
+        if(curTrack.size() > 1){
+            result.add(curTrack);
+        }
+        return result;
+    }
+    static private boolean checkSpeed(Pair<Date, Pair<Double, Double>> a, Pair<Date, Pair<Double, Double>> b, long lim){
+        double dist = 111.1111111 * ((a.second.first - b.second.first) * (a.second.first - b.second.first) +
+                Math.cos(a.second.first) * ((a.second.second - b.second.second) * (a.second.second - b.second.second)));
+        double time = TimeUnit.HOURS.convert(Math.abs(a.first.getTime() - b.first.getTime()), TimeUnit.MILLISECONDS);
+        return Math.abs(a.first.getTime() - b.first.getTime()) > INTERVAL || dist < lim * lim * time * time
+                || dist > 120 * 120 * time * time;
+    }
+
     private void updateLocations() {
         Log.d(LOG_TAG, "UI update initiated");
         if (null != mCurrentLocation) {

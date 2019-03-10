@@ -43,10 +43,6 @@ public class LocationActivity extends Activity{
     private static Button btnShowMap;
     private static TextView tvLocation;
     private static Intent mIntent;
-    private static Button btnSetBeginDate;
-    private static Button btnSetBeginTime;
-    private static Button btnSetEndDate;
-    private static Button btnSetEndTime;
 
     private int mYear, mMonth, mDay, mHour, mMinute, mSecond;
 
@@ -60,10 +56,6 @@ public class LocationActivity extends Activity{
         btnRestartUpdates = (Button) findViewById(R.id.btnRestartUpdates);
         btnFusedLocation = (Button) findViewById(R.id.btnShowLocation);
         btnShowMap = (Button) findViewById(R.id.btnShowMap);
-        btnSetBeginDate = (Button) findViewById(R.id.btnSetBeginDate);
-        btnSetBeginTime = (Button) findViewById(R.id.btnSetBeginTime);
-        btnSetEndDate = (Button) findViewById(R.id.btnSetEndDate);
-        btnSetEndTime = (Button) findViewById(R.id.btnSetEndTime);
         mIntent = new Intent(this, MyService.class);
 
         mHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -71,7 +63,6 @@ public class LocationActivity extends Activity{
         mYear = Calendar.getInstance().get(Calendar.YEAR);
         mMonth = Calendar.getInstance().get(Calendar.MONTH);
         mDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        updateTimes();
         btnShowMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,18 +73,13 @@ public class LocationActivity extends Activity{
         btnFusedLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                ArrayList<Pair<Date, Pair<Double, Double>>> listOfLocationPoints =
-                        MyService.getLocationList(getApplicationContext());
+                ArrayList<ArrayList<Pair<Date, Pair<Double, Double>>>> listOfLocationPoints =
+                        MyService.getListOfTracks(MyService.getLocationList(getApplicationContext()));
                 if(listOfLocationPoints.isEmpty())
                     tvLocation.setText("Location unknown");
                 else{
-                    Date date = listOfLocationPoints.get(listOfLocationPoints.size() - 1).first;
-                    double lat = listOfLocationPoints.get(listOfLocationPoints.size() - 1).second.first;
-                    double lng = listOfLocationPoints.get(listOfLocationPoints.size() - 1).second.second;
-                    tvLocation.setText("Amount of updates: " + listOfLocationPoints.size() + "\n" +
-                                    "Time of last update: " + date.toString() + "\n" +
-                                    "Latitude: " + Double.toString(lat) + "\n" +
-                                    "Longitude: " + Double.toString(lng));
+                    tvLocation.setText("Amount of tracks: " + listOfLocationPoints.size() + "\n" +
+                                        "Amount of points: " + MyService.getLocationList(getApplicationContext()).size());
                 }
 
             }
@@ -108,86 +94,6 @@ public class LocationActivity extends Activity{
             @Override
             public void onClick(View v) {
                 stopService(mIntent);
-            }
-        });
-        btnSetBeginDate.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                DatePickerDialog dialog = new DatePickerDialog(LocationActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        mYear = year - 1900;
-                        mMonth = month;
-                        mDay = dayOfMonth;
-                        mHour = MyService.getBegDate().getHours();
-                        mMinute = MyService.getBegDate().getMinutes();
-                        MyService.setBegDate(new Date(mYear, mMonth, mDay, mHour, mMinute, mSecond));
-                        Log.d(TAG, "DatePickerListner: " + mYear + " " + mMonth + " " + mDay);
-                        updateTimes();
-                    }
-                }, Calendar.getInstance().get(Calendar.YEAR),
-                        Calendar.getInstance().get(Calendar.MONTH),
-                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-                dialog.show();
-            }
-        });
-        btnSetBeginTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog dialog = new TimePickerDialog(LocationActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        mYear = MyService.getBegDate().getYear();
-                        mMonth = MyService.getBegDate().getMonth();
-                        mDay = MyService.getBegDate().getDay();
-                        mHour = hourOfDay;
-                        mMinute = minute;
-                        MyService.setBegDate(new Date(mYear, mMonth, mDay, mHour, mMinute, mSecond));
-                        updateTimes();
-                    }
-                }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                        Calendar.getInstance().get(Calendar.MINUTE), true);
-                dialog.show();
-            }
-        });
-        btnSetEndDate.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                DatePickerDialog dialog = new DatePickerDialog(LocationActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        mYear = year - 1900;
-                        mMonth = month;
-                        mDay = dayOfMonth;
-                        mHour = MyService.getEndDate().getHours();
-                        mMinute = MyService.getEndDate().getMinutes();
-                        MyService.setEndDate(new Date(mYear, mMonth, mDay, mHour, mMinute, mSecond));
-                        Log.d(TAG, "DatePickerListner: " + mYear + " " + mMonth + " " + mDay);
-                        updateTimes();
-                    }
-                }, Calendar.getInstance().get(Calendar.YEAR),
-                        Calendar.getInstance().get(Calendar.MONTH),
-                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-                dialog.show();
-            }
-        });
-        btnSetEndTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog dialog = new TimePickerDialog(LocationActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        mYear = MyService.getEndDate().getYear();
-                        mMonth = MyService.getEndDate().getMonth();
-                        mDay = MyService.getEndDate().getDay();
-                        mHour = hourOfDay;
-                        mMinute = minute;
-                        MyService.setEndDate(new Date(mYear, mMonth, mDay, mHour, mMinute, mSecond));
-                        updateTimes();
-                    }
-                }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                        Calendar.getInstance().get(Calendar.MINUTE), true);
-                dialog.show();
             }
         });
     }
@@ -213,19 +119,5 @@ public class LocationActivity extends Activity{
     @Override
     public void onResume() {
         super.onResume();
-    }
-    private void updateTimes(){
-        Log.d(TAG, MyService.getBegDate().toString());
-        btnSetBeginDate.setText(Integer.toString(MyService.getBegDate().getDate()) + "." +
-                Integer.toString(MyService.getBegDate().getMonth() + 1) + "." +
-                Integer.toString((MyService.getBegDate().getYear() + 1900)));
-        Log.d(TAG, MyService.getEndDate().toString());
-        btnSetEndDate.setText(Integer.toString(MyService.getEndDate().getDate()) + "." +
-                Integer.toString(MyService.getEndDate().getMonth() + 1) + "." +
-                Integer.toString((MyService.getEndDate().getYear() + 1900)));
-        btnSetBeginTime.setText(MyService.getBegDate().getHours() + ":" +
-                MyService.getBegDate().getMinutes());
-        btnSetEndTime.setText(MyService.getEndDate().getHours() + ":" +
-                MyService.getEndDate().getMinutes());
     }
 }
