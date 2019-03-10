@@ -1,0 +1,7 @@
+if(checkSpeed(prev, cur, 2)){
+    if(curTrack.size() > 1){
+         result.add(curTrack);
+    }
+    curTrack = new ArrayList<>();
+}
+curTrack.add(cur);
