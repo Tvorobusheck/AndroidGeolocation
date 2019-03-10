@@ -1,13 +1,13 @@
-\frametitle{Алгоритм расчета поголовья бобров}
-  \framesubtitle{(оформляем фрагмент исходного кода или псевдокода)}
+\frametitle{Алгоритм разбиения на треки}
+\framesubtitle{Код для непосредственной записи трека}
 
-  \begin{verbatim}
-    цикл для всех водоемов
-      цикл для всех хаток
-        если хатка не брошена, то
-          sum += количество бобров в текущей хатке
-        конец условия
-      конец цикла по хаткам
-    конец цикла по водоемам
-  \end{verbatim}
+\begin{verbatim}
+if(checkSpeed(prev, cur, 2)){
+    if(curTrack.size() > 1){
+        result.add(curTrack);
+    }
+    curTrack = new ArrayList<>();
+}
+
+\end{verbatim}
 
