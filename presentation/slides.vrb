@@ -1,13 +1,13 @@
 \frametitle{Алгоритм разбиения на треки}
-\framesubtitle{Код для непосредственной записи трека}
+\framesubtitle{Код для определения точки остановки}
 
-\begin{verbatim}
-if(checkSpeed(prev, cur, 2)){
-    if(curTrack.size() > 1){
-        result.add(curTrack);
-    }
-    curTrack = new ArrayList<>();
-}
-
-\end{verbatim}
+\begin{lstlisting}
+CheckSpeed:
+	dist = sqrt(111.1111111111 * ((x1 - x2) ^ 2 +
+		cos((x1 + x2) / 2) * (y1 - y2) ^ 2))
+	time = to_hourse(t1 - t2)
+	return t1 - t2 > INTERVAL * 10 ||
+		dist / time <= 2 ||
+		dist / time >= 150
+\end{lstlisting}
 

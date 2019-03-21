@@ -5,6 +5,7 @@
 
 \documentclass[hyperref={unicode}]{beamer}
 
+\usepackage{listings}  
 \usepackage[utf8x]{inputenc}
 \usepackage[english, russian]{babel}
 \usepackage{color, colortbl}
@@ -25,8 +26,9 @@
     Бобры и Интернет
 ]{%
     % Полное название работы отображается на титульной странице
-	Персонализированный трекер\\
-	пользователя
+	Реализация мобильного приложения \\
+	интеллектуального персонифицированного\\
+	геолокационного трекера пользователя
 }
 
 % Подзаголовком опишите тип работы:
@@ -49,7 +51,7 @@
     01.06.2018
 ]{%
     % Руководитель
-    Научный руководитель: д.ф.-м.н., преподаватель  В. М. Димитров
+    Научный руководитель: преподаватель  В. М. Димитров
 }
 
 \institute[%
@@ -116,6 +118,18 @@
 \end{frame}
 % Пример слайда содержащего код
 \begin{frame}
+% Заголовок слайда
+\frametitle{Уровень энергопотребления}
+Исследования проводились при следующих условий:
+\begin{itemize}
+	\item Устройство - ZTE Blade X3
+	\item ОС - Android 5.1
+	\item Google Play Services 49
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
   % Заголовок слайда
   \frametitle{Уровень энергопотребления}
 	\begin{center}
@@ -130,34 +144,15 @@
 \frametitle{Алгоритм разбиения на треки}
 \framesubtitle{Код для определения точки остановки}
 
-\begin{verbatim}
-static private boolean checkSpeed(Pair<Date, Pair<Double, Double>> a, Pair<Date, Pair<Double, Double>> b, long lim){
-    double dist = 111.1111111 * ((a.second.first - b.second.first) * (a.second.first - b.second.first) +
-    Math.cos(a.second.first) * ((a.second.second - b.second.second) * (a.second.second - b.second.second)));
-    double time = TimeUnit.HOURS.convert(Math.abs(a.first.getTime() - b.first.getTime()), TimeUnit.MILLISECONDS);
-    return Math.abs(a.first.getTime() - b.first.getTime()) > INTERVAL || dist < lim * lim * time * time
-    || dist > 120 * 120 * time * time;
-}
-\end{verbatim}
-
-\end{frame}
-
-
-% Пример слайда содержащего код
-\begin{frame}[fragile]
-% Заголовок слайда
-\frametitle{Алгоритм разбиения на треки}
-\framesubtitle{Код для непосредственной записи трека}
-
-\begin{verbatim}
-if(checkSpeed(prev, cur, 2)){
-    if(curTrack.size() > 1){
-        result.add(curTrack);
-    }
-    curTrack = new ArrayList<>();
-}
-
-\end{verbatim}
+\begin{lstlisting}
+CheckSpeed:
+	dist = sqrt(111.1111111111 * ((x1 - x2) ^ 2 + 
+		cos((x1 + x2) / 2) * (y1 - y2) ^ 2))
+	time = to_hourse(t1 - t2)
+	return t1 - t2 > INTERVAL * 10 ||
+		dist / time <= 2 ||
+		dist / time >= 150
+\end{lstlisting}
 
 \end{frame}
 
@@ -173,6 +168,17 @@ if(checkSpeed(prev, cur, 2)){
   	\item Написано основное приложение
   \end{itemize}
   
+\end{frame}
+
+% Пример слайда содержащего код
+\begin{frame}
+% Заголовок слайда
+\frametitle{Скриншот приложения}
+\begin{center}
+	\includegraphics[height=0.8\textheight]{images/Screen_time1.png}
+	\includegraphics[height=0.8\textheight]{images/Screen_time2.png}
+\end{center}
+
 \end{frame}
 
 % Пример слайда содержащего код
