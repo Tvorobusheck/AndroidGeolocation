@@ -229,7 +229,10 @@ public class MyService extends Service  implements
             }
             else{
                 Pair<Date, Pair<Double, Double>> cur = locations.get(i);
-                if(checkSpeed(prev, cur, 2)){
+
+                ArrayList<Pair<Date, Pair<Double, Double>>> lst = new ArrayList<>();
+                for(int j = i; j >= 0 && j > i - 5; j--)
+                if(checkTime(prev, cur) || checkSpeed(lst, 5)){
                     if(curTrack.size() > 1){
                         result.add(curTrack);
                     }
@@ -243,11 +246,20 @@ public class MyService extends Service  implements
         }
         return result;
     }
-    static private boolean checkSpeed(Pair<Date, Pair<Double, Double>> a, Pair<Date, Pair<Double, Double>> b, long lim){
-        double dist = 111.1111111 * ((a.second.first - b.second.first) * (a.second.first - b.second.first) +
-                Math.cos(a.second.first) * ((a.second.second - b.second.second) * (a.second.second - b.second.second)));
-        double time = TimeUnit.HOURS.convert(Math.abs(a.first.getTime() - b.first.getTime()), TimeUnit.MILLISECONDS);
-        return Math.abs(a.first.getTime() - b.first.getTime()) > INTERVAL || dist < lim * lim * time * time
+    static private boolean checkTime(Pair<Date, Pair<Double, Double>> a, Pair<Date, Pair<Double, Double>> b){
+        return Math.abs(a.first.getTime() - b.first.getTime()) > INTERVAL;
+    }
+    static private boolean checkSpeed(ArrayList <Pair<Date, Pair<Double, Double>>> lst, long lim){
+        double dist = 0;
+        double time = 0;
+        for(int i = 0; i < lst.size(); i++){
+            Pair<Date, Pair<Double, Double>> a = lst.get(i);
+            Pair<Date, Pair<Double, Double>> b = lst.get(i % lst.size());
+            dist += 111.1111111 * ((a.second.first - b.second.first) * (a.second.first - b.second.first) +
+                    Math.cos(a.second.first) * ((a.second.second - b.second.second) * (a.second.second - b.second.second)));
+            time += TimeUnit.HOURS.convert(Math.abs(a.first.getTime() - b.first.getTime()), TimeUnit.MILLISECONDS);
+        }
+        return dist < lim * lim * time * time
                 || dist > 120 * 120 * time * time;
     }
 
