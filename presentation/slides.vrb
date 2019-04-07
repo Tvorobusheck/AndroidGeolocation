@@ -1,13 +1,17 @@
 \frametitle{Алгоритм разбиения на треки}
-\framesubtitle{Код для определения точки остановки}
+\framesubtitle{Модифицированный алгоритм для определения точки остановки}
 
 \begin{lstlisting}
-CheckSpeed:
-	dist = sqrt(111.1111111111 * ((x1 - x2) ^ 2 +
-		cos((x1 + x2) / 2) * (y1 - y2) ^ 2))
-	time = to_hourse(t1 - t2)
-	return t1 - t2 > INTERVAL * 10 ||
-		dist / time <= 2 ||
-		dist / time >= 150
+checkSpeed:
+  dist = 0;
+  time = 0;
+  for i in len(points):
+    x1, y1, t1= points.get(i)
+    x2, y2, t2 = points.get(i % len(points))
+    dist += sqrt(111.1111111111 * ((x1 - x2) ^ 2 +
+      cos((x1 + x2) / 2) * (y1 - y2) ^ 2))
+    time += to_hourse(t1 - t2)
+  return dist / time < lim or
+   dist / time > 120
 \end{lstlisting}
 
